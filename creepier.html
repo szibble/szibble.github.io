@@ -1,0 +1,107 @@
+<html>
+ <head>
+  <title>KIRA'S WONDERFUL TRIP TO THE MIDDLE EAST</title>
+  <style type="text/css">
+   body {
+     background: url('middle_east_map.jpg');
+     background-size: cover;
+     height: 100%;
+     overflow: hidden;
+   }
+  </style>
+  <script type="text/javascript">
+    function allTheKiras() {
+      var imgNames = ['kira1.jpg', 'kira2.jpg', 'kira3.jpg', 'kira4.jpg', 'kira5.jpg'];
+ 
+      var images = [];
+      for (var i = 0; i < imgNames.length; i++) {
+        var img = new Image();
+        img.src = imgNames[i];
+        img.style.height = '150px';
+        img.style.width = '150px';
+        img.style.position = 'absolute';
+        img.style.top = '0px';
+        img.style.left = '0px';
+        images[i] = img;
+      }
+
+      var i = 0;
+      var refId = null;
+
+      refId = setInterval(function() {
+        window.console.log("executing pass " + i);
+        if (i < 10000) {
+          var randomImg = images[Math.floor(images.length * Math.random())];
+          var curImg = randomImg.cloneNode(true);
+          var leftOrRight = chooseDirection();
+          var upOrDown = chooseDirection();
+
+          var newSize = changeSize() + 'px';
+          curImg.style.width = newSize;
+          curImg.style.height = newSize;
+
+          // move image location over so it's not in a corner necessarily
+          curImg.style.top = Math.floor(Math.random() * parseInt(window.innerHeight));
+          curImg.style.left = Math.floor(Math.random() * parseInt(window.innerWidth));
+
+          document.body.appendChild(curImg);
+          moveAKira(curImg, leftOrRight, upOrDown);
+          i++;
+        } else {
+          clearInterval(refId);
+        }
+      }, 2000);
+
+      function changeSize() {
+        return Math.floor(Math.random() * 100) + 100;
+      }
+
+      function getSizeDiff() {
+        return chooseDirection();
+      }
+
+      function chooseDirection() {
+         var dir = Math.floor(Math.random() * 2);
+         if (dir == 1) {
+           return -5;
+         } else {
+           return 5;
+         }
+      }
+ 
+      function moveAKira(img, leftOrRight, upOrDown) {
+
+        if (parseInt(img.style.left) > window.innerWidth) {
+          leftOrRight = -5;
+        } else if (parseInt(img.style.left) + parseInt(img.style.width) < 0) {
+          leftOrRight = 5;
+        }
+
+
+        if (parseInt(img.style.top) > window.innerHeight) {
+          upOrDown = -5;
+        } else if (parseInt(img.style.top) + parseInt(img.style.height) < 0) {
+          upOrDown = 5;
+        }
+
+        var sizeDiff = getSizeDiff();
+        if (parseInt(img.style.width) >= 400) {
+           sizeDiff = -5;
+        }
+
+        img.style.width = parseInt(img.style.width) + sizeDiff + 'px';
+        img.style.height = parseInt(img.style.height) + sizeDiff + 'px';
+
+        img.style.left = parseInt(img.style.left) + leftOrRight + 'px';
+        img.style.top = parseInt(img.style.top) + upOrDown + 'px';
+        img.style.visibility = 'visible';
+
+        setTimeout(function() { moveAKira(img, chooseDirection(), chooseDirection()); }, 20);
+      }
+    }
+  </script>
+ </head>
+  <body onLoad="allTheKiras()">
+  </body>
+</html>
+
